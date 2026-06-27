@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <!-- 줄기 -->
+  <path d="M50,52 C 53,66 50,74 49,88" fill="none" stroke="#4ea877" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- 네 개의 하트형 잎 (중심 50,50 기준으로 90도씩 회전) -->
+  <g fill="#74cf95" stroke="#54bd83" stroke-width="1.2" stroke-linejoin="round">
+    <path d="M50,50 C 33,34 31,16 50,24 C 69,16 67,34 50,50 Z"/>
+    <path d="M50,50 C 33,34 31,16 50,24 C 69,16 67,34 50,50 Z" transform="rotate(90 50 50)"/>
+    <path d="M50,50 C 33,34 31,16 50,24 C 69,16 67,34 50,50 Z" transform="rotate(180 50 50)"/>
+    <path d="M50,50 C 33,34 31,16 50,24 C 69,16 67,34 50,50 Z" transform="rotate(270 50 50)"/>
+  </g>
+</svg>
