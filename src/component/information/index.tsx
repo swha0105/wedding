@@ -1,153 +1,110 @@
 import { useState } from "react"
 import { BRIDE_INFO, GROOM_INFO } from "../../const"
-import { STATIC_ONLY } from "../../env"
-import { Button } from "../button"
 import { LazyDiv } from "../lazyDiv"
-import { Modal } from "../modal"
-import { AttendanceInfo } from "./attendance"
+import { useToast } from "../toast"
 
 /**
- * 식사 정보 안내 컴포넌트입니다.
+ * "카카오뱅크 3333-01-2345678" 형태의 문자열을 은행명과 계좌번호로 나눕니다.
+ * 공백이 없으면 전체를 계좌번호로 취급합니다.
  */
-export const Information1 = () => {
-  return (
-    <>
-      <h2 className="english">Information</h2>
-      <div className="info-card">
-        <div className="label">식사 안내</div>
-        <div className="content">
-          식사시간: 12시 30분 ~ 14시 30분
-          <br />
-          장소: 지하 1층 연회장
-        </div>
-      </div>
-    </>
-  )
+const splitAccount = (account: string) => {
+  const separatorIdx = account.indexOf(" ")
+  if (separatorIdx === -1) return { bank: "", number: account }
+  return {
+    bank: account.slice(0, separatorIdx),
+    number: account.slice(separatorIdx + 1).trim(),
+  }
 }
 
 /**
- * 축의금 계좌번호 안내 컴포넌트입니다.
- * 신랑측, 신부측 계좌번호를 모달로 보여줍니다.
+ * 계좌 목록 한 묶음(신랑측 / 신부측)을 렌더링합니다.
  */
-export const Information2 = () => {
-  const donationModalState = useState(false)
-  const [isGroom, setIsGroom] = useState(true)
+const AccountGroup = ({
+  title,
+  people,
+}: {
+  title: string
+  people: { relation: string; name: string; account?: string }[]
+}) => {
+  const showToast = useToast()
 
-  return (
-    <>
-      <div className="info-card">
-        <div className="label">마음 전하기</div>
-        <div className="content">
-          참석이 어려워 직접 축하해주지 못하는
-          <br />
-          분들을 위해 계좌번호를 기재하였습니다.
-          <br />
-          넓은 마음으로 양해 부탁드립니다.
-        </div>
-
-        <div className="break" />
-
-        <Button
-          style={{ width: "100%" }}
-          onClick={() => {
-            donationModalState[1](true)
-            setIsGroom(true)
-          }}
-        >
-          신랑측 계좌번호 보기
-        </Button>
-        <div className="break" />
-        <Button
-          style={{ width: "100%" }}
-          onClick={() => {
-            donationModalState[1](true)
-            setIsGroom(false)
-          }}
-        >
-          신부측 계좌번호 보기
-        </Button>
-      </div>
-
-      {/* 계좌 정보 모달 */}
-      <Modal
-        modalState={donationModalState}
-        className="donation-modal"
-        closeOnClickBackground={true}
-      >
-        <div className="header">
-          <div className="title">
-            {isGroom ? "신랑측 계좌번호" : "신부측 계좌번호"}
-          </div>
-        </div>
-        <div className="content">
-          {(isGroom ? GROOM_INFO : BRIDE_INFO)
-            .filter(({ account }) => !!account)
-            .map(({ relation, name, account }) => (
-              <div className="account-info" key={relation}>
-                <div>
-                  <div className="name">
-                    <span className="relation">{relation}</span> {name}
-                  </div>
-                  <div>{account}</div>
-                </div>
-                <Button
-                  className="copy-button"
-                  onClick={async () => {
-                    if (account) {
-                      try {
-                        // 계좌번호 복사 기능
-                        await navigator.clipboard.writeText(account)
-                        alert(account + "\n복사되었습니다.")
-                      } catch {
-                        alert("복사에 실패했습니다.")
-                      }
-                    }
-                  }}
-                >
-                  복사하기
-                </Button>
-              </div>
-            ))}
-        </div>
-        <div className="footer">
-          <Button
-            buttonStyle="style2"
-            className="bg-light-grey-color text-dark-color"
-            onClick={() => donationModalState[1](false)}
-          >
-            닫기
-          </Button>
-        </div>
-      </Modal>
-    </>
-  )
-}
-
-/**
- * 정보 안내(식사, 축의금, 참석의사)를 통합하여 표시하는 컴포넌트입니다.
- *
- * @returns {JSX.Element} 정보 안내 섹션
- */
-export const Information = () => {
-  // 정적 모드일 경우 참석 의사 전달 기능을 제외합니다.
-  if (STATIC_ONLY) {
-    return (
-      <>
-        <LazyDiv className="card information">
-          <Information1 />
-        </LazyDiv>
-        <LazyDiv className="card information">
-          <Information2 />
-        </LazyDiv>
-      </>
-    )
+  const copy = async (number: string) => {
+    try {
+      await navigator.clipboard.writeText(number)
+      showToast("계좌번호가 복사되었습니다.")
+    } catch {
+      showToast("복사에 실패했습니다.")
+    }
   }
 
   return (
-    <LazyDiv className="card information">
-      <Information1 />
-      <Information2 />
-      <AttendanceInfo />
-    </LazyDiv>
+    <>
+      <div className="group-label">{title}</div>
+      {people
+        .filter(({ account }) => !!account)
+        .map(({ relation, name, account }) => {
+          const { bank, number } = splitAccount(account as string)
+          return (
+            <div className="account-row" key={relation}>
+              <div>
+                <div className="holder">
+                  {bank && <>{bank} · </>}
+                  {relation} {name}
+                </div>
+                <div className="number">{number}</div>
+              </div>
+              <button
+                type="button"
+                className="copy"
+                onClick={() => copy(number)}
+              >
+                복사
+              </button>
+            </div>
+          )
+        })}
+    </>
+  )
+}
+
+/**
+ * 마음 전하실 곳(ACCOUNT) 섹션입니다.
+ * 신랑측·신부측 계좌번호를 펼침형으로 보여주고 복사 기능을 제공합니다.
+ *
+ * @returns {JSX.Element} 계좌 안내 섹션
+ */
+export const Account = () => {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <section className="section account">
+      <LazyDiv className="reveal eyebrow">ACCOUNT</LazyDiv>
+
+      <LazyDiv className="reveal">
+        <p className="description">
+          참석이 어려우신 분께서도
+          <br />
+          마음을 전하실 수 있도록 안내드립니다.
+        </p>
+      </LazyDiv>
+
+      <LazyDiv className="reveal">
+        <button
+          type="button"
+          className={`accordion-toggle${open ? " open" : ""}`}
+          aria-expanded={open}
+          onClick={() => setOpen((open) => !open)}
+        >
+          마음 전하실 곳<span className="chevron">▼</span>
+        </button>
+
+        {open && (
+          <div className="accordion-panel account-list">
+            <AccountGroup title="신랑측" people={GROOM_INFO} />
+            <AccountGroup title="신부측" people={BRIDE_INFO} />
+          </div>
+        )}
+      </LazyDiv>
+    </section>
   )
 }

@@ -1,154 +1,113 @@
-import { Fragment } from "react/jsx-runtime"
+import { useState } from "react"
 import {
+  BRIDE_FATHER,
   BRIDE_FULLNAME,
   BRIDE_INFO,
-  BRIDE_FATHER,
   BRIDE_MOTHER,
+  BRIDE_TITLE,
+  GROOM_FATHER,
   GROOM_FULLNAME,
   GROOM_INFO,
-  GROOM_FATHER,
   GROOM_MOTHER,
   GROOM_TITLE,
-  BRIDE_TITLE,
 } from "../../const"
-import { Modal } from "../modal"
-import { Button } from "../button"
 import { LazyDiv } from "../lazyDiv"
-import PhoneIcon from "../../icons/phone-flip-icon.svg?react"
-import EnvelopeIcon from "../../icons/envelope-icon.svg?react"
-import { useState } from "react"
 
 /**
- * 초대 메시지와 혼주 정보, 연락하기 기능을 제공하는 컴포넌트입니다.
+ * "신랑 아버지" → "아버지" 처럼 앞의 신랑/신부 접두사를 떼어냅니다.
+ * ("신랑", "신부" 자체는 그대로 둡니다.)
+ */
+const shortRelation = (relation: string) =>
+  relation.replace(/^(신랑|신부)\s+/, "")
+
+/**
+ * 연락처 목록 한 묶음(신랑측 / 신부측)을 렌더링합니다.
+ */
+const ContactGroup = ({
+  title,
+  people,
+}: {
+  title: string
+  people: { relation: string; name: string; phone?: string }[]
+}) => (
+  <>
+    <div className="group-label">{title}</div>
+    {people
+      .filter(({ phone }) => !!phone)
+      .map(({ relation, name, phone }) => (
+        <div className="contact-row" key={relation}>
+          <div className="who">
+            <span className="relation">{shortRelation(relation)}</span>
+            {name}
+          </div>
+          <div className="actions">
+            <a href={`tel:${phone}`}>전화</a>
+            <a href={`sms:${phone}`}>문자</a>
+          </div>
+        </div>
+      ))}
+  </>
+)
+
+/**
+ * 인사말(INVITATION) 섹션입니다.
+ * 초대 문구, 혼주·신랑신부 정보, 그리고 펼침형 연락처를 제공합니다.
  *
- * @returns {JSX.Element} 모시는 글 섹션
+ * @returns {JSX.Element} 인사말 섹션
  */
 export const Invitation = () => {
-  const contactModalState = useState(false)
+  const [contactOpen, setContactOpen] = useState(false)
+
   return (
-    <>
-      <LazyDiv className="card invitation">
-        <h2 className="english">Invitation</h2>
+    <section className="section alt invitation">
+      <LazyDiv className="reveal eyebrow">INVITATION</LazyDiv>
+      <LazyDiv className="reveal rule" />
 
-        <div className="break" />
-
-        {/* 초대 문구 — TODO: 마무리 문장 확정 (원문이 "오셔서 많은…"에서 끊김) */}
-        <div className="content">성격, 취미, 종교</div>
-        <div className="content">모든 게 다른 두 남녀가</div>
-        <div className="content">사랑이란 이름으로</div>
-        <div className="content">함께하게 되었습니다.</div>
-        <div className="break" />
-        <div className="content">오셔서 많은 축복 부탁드립니다.</div>
-
-        <div className="break" />
-
-        {/* 혼주 및 신랑 정보 */}
-        <div className="name">
-          {GROOM_FATHER} · {GROOM_MOTHER}
-          <span className="relation">
-            의 <span className="relation-name">{GROOM_TITLE}</span>
-          </span>{" "}
-          {GROOM_FULLNAME}
-        </div>
-        {/* 혼주 및 신부 정보 */}
-        <div className="name">
-          {BRIDE_FATHER} · {BRIDE_MOTHER}
-          <span className="relation">
-            의 <span className="relation-name">{BRIDE_TITLE}</span>
-          </span>{" "}
-          {BRIDE_FULLNAME}
-        </div>
-
-        <div className="break" />
-
-        <Button
-          onClick={() => {
-            contactModalState[1](true)
-          }}
-        >
-          연락하기
-        </Button>
+      <LazyDiv className="reveal">
+        <p className="message">
+          성격도, 취미도, 환경도, 그리고 종교마저 달랐지만
+          <br />
+          사랑이란 이름으로 함께하게 되었습니다.
+          <br />
+          <br />
+          달라서 더 지루할 틈 없는 저희 두 사람,
+          <br />
+          이제는 부부이자 가장 친한 친구로 예쁘게 살아보겠습니다.
+          <br />
+          귀한 걸음으로 오셔서 함께 축복해 주세요.
+        </p>
       </LazyDiv>
 
-      {/* 연락처 정보 모달 */}
-      <Modal
-        modalState={contactModalState}
-        className="contact-modal"
-        closeOnClickBackground={true}
-      >
-        <div className="header">
-          <div className="title-group">
-            <div className="title">축하 인사 전하기</div>
-            <div className="subtitle">
-              전화, 문자메세지로 축하 인사를 전해보세요.
-            </div>
-          </div>
+      <LazyDiv className="reveal parents">
+        <div>
+          {GROOM_FATHER} · {GROOM_MOTHER}{" "}
+          <span className="relation">의 {GROOM_TITLE}</span> {GROOM_FULLNAME}
         </div>
+        <div>
+          {BRIDE_FATHER} · {BRIDE_MOTHER}{" "}
+          <span className="relation">의 {BRIDE_TITLE}</span> {BRIDE_FULLNAME}
+        </div>
+      </LazyDiv>
 
-        <div className="content">
-          {/* 신랑측 연락처 */}
-          <div className="contact-info">
-            {GROOM_INFO.filter(({ phone }) => !!phone).map(
-              ({ relation, name, phone }) => (
-                <Fragment key={relation}>
-                  <div className="relation">{relation}</div>
-                  <div>{name}</div>
-                  <div>
-                    {/* 전화 걸기 */}
-                    <PhoneIcon
-                      className="flip icon"
-                      onClick={() => {
-                        window.open(`tel:${phone}`, "_self")
-                      }}
-                    />
-                    {/* 문자 보내기 */}
-                    <EnvelopeIcon
-                      className="icon"
-                      onClick={() => {
-                        window.open(`sms:${phone}`, "_self")
-                      }}
-                    />
-                  </div>
-                </Fragment>
-              ),
-            )}
+      {/* 연락하기 — 펼침형 */}
+      <LazyDiv className="reveal contact">
+        <button
+          type="button"
+          className={`accordion-toggle${contactOpen ? " open" : ""}`}
+          aria-expanded={contactOpen}
+          onClick={() => setContactOpen((open) => !open)}
+        >
+          연락하기
+          <span className="chevron">▼</span>
+        </button>
+
+        {contactOpen && (
+          <div className="accordion-panel contact-list">
+            <ContactGroup title="신랑측" people={GROOM_INFO} />
+            <ContactGroup title="신부측" people={BRIDE_INFO} />
           </div>
-          {/* 신부측 연락처 */}
-          <div className="contact-info">
-            {BRIDE_INFO.filter(({ phone }) => !!phone).map(
-              ({ relation, name, phone }) => (
-                <Fragment key={relation}>
-                  <div className="relation">{relation}</div>
-                  <div>{name}</div>
-                  <div>
-                    <PhoneIcon
-                      className="flip icon"
-                      onClick={() => {
-                        window.open(`tel:${phone}`, "_self")
-                      }}
-                    />
-                    <EnvelopeIcon
-                      className="icon"
-                      onClick={() => {
-                        window.open(`sms:${phone}`, "_self")
-                      }}
-                    />
-                  </div>
-                </Fragment>
-              ),
-            )}
-          </div>
-        </div>
-        <div className="footer">
-          <Button
-            buttonStyle="style2"
-            className="bg-light-grey-color text-dark-color"
-            onClick={() => contactModalState[1](false)}
-          >
-            닫기
-          </Button>
-        </div>
-      </Modal>
-    </>
+        )}
+      </LazyDiv>
+    </section>
   )
 }

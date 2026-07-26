@@ -1,57 +1,26 @@
-import {
-  BRIDE_FULLNAME,
-  GROOM_FULLNAME,
-  LOCATION,
-  WEDDING_DATE,
-  WEDDING_DATE_FORMAT,
-} from "../../const"
 import { COVER_IMAGE } from "../../images"
+import { DDay } from "../dday"
 import { LazyDiv } from "../lazyDiv"
 
-const DAY_OF_WEEK = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-]
-
 /**
- * 초대장의 메인 커버 섹션입니다.
- * 예식 일시, 신랑/신부 이름, 장소를 표시합니다.
+ * 초대장의 대문(INTRO) 섹션입니다.
+ * 화면 폭을 꽉 채우는 메인 사진과 하단 그라데이션 페이드,
+ * 그리고 D-DAY 카운트다운으로 구성됩니다.
  *
- * @returns {JSX.Element} 커버 섹션
+ * @returns {JSX.Element} 대문 섹션
  */
 export const Cover = () => {
   return (
-    <LazyDiv className="card cover">
-      {/* 상단 날짜 표시 */}
-      <div className="wedding-date">
-        {WEDDING_DATE.format("YYYY")}
-        <div className="divider" />
-        {WEDDING_DATE.format("MM")}
-        <div className="divider" />
-        {WEDDING_DATE.format("DD")}
-      </div>
-      {/* 요일 표시 (영어) */}
-      <div className="wedding-day-of-week">
-        {DAY_OF_WEEK[WEDDING_DATE.day()]}
-      </div>
-      {/* 커버 이미지 */}
-      <div className="image-wrapper">
-        <img src={COVER_IMAGE} alt="sample" />
-      </div>
-      {/* 이름 표시 */}
-      <div className="names">
-        {GROOM_FULLNAME}
-        <div className="divider" />
-        {BRIDE_FULLNAME}
-      </div>
-      {/* 예식 정보 (포맷팅된 날짜 및 장소) */}
-      <div className="info">{WEDDING_DATE.format(WEDDING_DATE_FORMAT)}</div>
-      <div className="info">{LOCATION}</div>
-    </LazyDiv>
+    <section className="section intro">
+      <LazyDiv className="reveal">
+        <div className="hero">
+          <img className="hero-image" src={COVER_IMAGE} alt="" />
+          {/* 사진 하단이 배경색으로 자연스럽게 녹아들도록 하는 그라데이션 */}
+          <div className="hero-fade" />
+        </div>
+      </LazyDiv>
+
+      <DDay />
+    </section>
   )
 }
