@@ -1,16 +1,11 @@
 import { useEffect, useState, useRef } from "react"
-import { useKakao, useNaver } from "../store"
+import { useNaver } from "../store"
 import nmapIcon from "../../icons/nmap-icon.png"
 import knaviIcon from "../../icons/knavi-icon.png"
 import tmapIcon from "../../icons/tmap-icon.png"
 import LockIcon from "../../icons/lock-icon.svg?react"
 import UnlockIcon from "../../icons/unlock-icon.svg?react"
-import {
-  KMAP_PLACE_ID,
-  LOCATION,
-  NMAP_PLACE_ID,
-  WEDDING_HALL_POSITION,
-} from "../../const"
+import { LOCATION, WEDDING_HALL_POSITION } from "../../const"
 import { NAVER_MAP_CLIENT_ID } from "../../env"
 
 /**
@@ -37,24 +32,31 @@ const checkDevice = () => {
 export const Map = () => {
   return (
     <>
-      {NAVER_MAP_CLIENT_ID ? <NaverMap /> : <MapPlaceholder />}
+      {NAVER_MAP_CLIENT_ID ? <NaverMap /> : <EmbedMap />}
       <Navigation />
     </>
   )
 }
 
 /**
- * 네이버 지도 키가 없을 때 보여주는 자리 표시 영역입니다.
+ * 네이버 지도 키가 없을 때 사용하는 구글 지도 임베드입니다.
+ * 별도의 API 키·발급 없이 좌표만으로 실제 지도를 표시합니다.
  */
-const MapPlaceholder = () => (
-  <div className="map-placeholder">
-    <div className="grid" />
-    <div className="pin-group">
-      <div className="pin" />
-      <div className="caption">지도 준비 중입니다</div>
+const EmbedMap = () => {
+  const [lng, lat] = WEDDING_HALL_POSITION
+  return (
+    <div className="map-wrapper">
+      <iframe
+        title="예식장 위치"
+        className="map-inner"
+        src={`https://www.google.com/maps?q=${lat},${lng}&z=16&hl=ko&output=embed`}
+        style={{ border: 0 }}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+      />
     </div>
-  </div>
-)
+  )
+}
 
 /**
  * 네이버 지도를 실제로 렌더링하는 내부 컴포넌트입니다.
@@ -147,64 +149,44 @@ const NaverMap = () => {
 }
 
 /**
- * 길찾기 앱(네이버 지도, 카카오 내비, 티맵) 연결 버튼 모음입니다.
+ * 길찾기 앱(네이버 지도, 카카오 맵, 티맵) 연결 버튼 모음입니다.
+ * 장소 ID 없이 좌표·장소명 기반 링크로 동작하므로, 좌표만 정확하면
+ * 어떤 기기에서도 올바른 위치로 연결됩니다.
  */
 const Navigation = () => {
-  const kakao = useKakao()
+  const [lng, lat] = WEDDING_HALL_POSITION
 
   return (
     <div className="navigation">
-      {/* 네이버 지도 연동 */}
+      {/* 네이버 지도 — 장소명 검색 (웹/모바일 앱 자동 연결) */}
       <button
         type="button"
-        onClick={() => {
-          switch (checkDevice()) {
-            case "ios":
-            case "android":
-              window.open(`nmap://place?id=${NMAP_PLACE_ID}`, "_self")
-              break
-            default:
-              window.open(
-                `https://map.naver.com/p/entry/place/${NMAP_PLACE_ID}`,
-                "_blank",
-              )
-              break
-          }
-        }}
+        onClick={() =>
+          window.open(
+            `https://map.naver.com/p/search/${encodeURIComponent(LOCATION)}`,
+            "_blank",
+          )
+        }
       >
         <img src={nmapIcon} alt="" />
         네이버지도
       </button>
 
-      {/* 카카오 내비 연동 */}
+      {/* 카카오맵 — 좌표+장소명 길찾기 링크 (웹/모바일 앱 자동 연결) */}
       <button
         type="button"
-        onClick={() => {
-          switch (checkDevice()) {
-            case "ios":
-            case "android":
-              if (kakao)
-                kakao.Navi.start({
-                  name: LOCATION,
-                  x: WEDDING_HALL_POSITION[0],
-                  y: WEDDING_HALL_POSITION[1],
-                  coordType: "wgs84",
-                })
-              break
-            default:
-              window.open(
-                `https://map.kakao.com/link/map/${KMAP_PLACE_ID}`,
-                "_blank",
-              )
-              break
-          }
-        }}
+        onClick={() =>
+          window.open(
+            `https://map.kakao.com/link/to/${encodeURIComponent(LOCATION)},${lat},${lng}`,
+            "_blank",
+          )
+        }
       >
         <img src={knaviIcon} alt="" />
         카카오맵
       </button>
 
-      {/* 티맵 연동 */}
+      {/* 티맵 — 모바일 앱 좌표 길찾기, 데스크톱은 카카오맵 웹으로 대체 */}
       <button
         type="button"
         onClick={() => {
@@ -212,17 +194,19 @@ const Navigation = () => {
             case "ios":
             case "android": {
               const params = new URLSearchParams({
-                goalx: WEDDING_HALL_POSITION[0].toString(),
-                goaly: WEDDING_HALL_POSITION[1].toString(),
+                goalx: lng.toString(),
+                goaly: lat.toString(),
                 goalName: LOCATION,
               })
               window.open(`tmap://route?${params.toString()}`, "_self")
               break
             }
-            default: {
-              alert("모바일에서 확인하실 수 있습니다.")
+            default:
+              window.open(
+                `https://map.kakao.com/link/to/${encodeURIComponent(LOCATION)},${lat},${lng}`,
+                "_blank",
+              )
               break
-            }
           }
         }}
       >

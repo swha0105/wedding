@@ -32,12 +32,11 @@ export const HOLIDAYS = [] // 11월 공휴일 없음
 /**
  * 예식 장소 명칭
  */
-export const LOCATION = "네이버 1784"
+export const LOCATION = "네이버 1784 28층 스카이홀"
 
 /**
  * 예식 장소 상세 주소
  */
-// TODO: 정확한 도로명 주소 확인 (네이버 1784 = 경기 성남시 분당구 정자일로 95, 28층)
 export const LOCATION_ADDRESS = "경기 성남시 분당구 정자일로 95, 28층"
 
 /**
@@ -53,23 +52,9 @@ export const SHARE_ADDRESS_TITLE = LOCATION
 
 /**
  * 지도 서비스(네이버, 카카오)에 사용할 좌표 [경도, 위도]
+ * 네이버 1784 (경기 성남시 분당구 정자일로 95) 좌표
  */
-// TODO: 네이버 1784 좌표로 교체 (현재 값은 템플릿 기본값=서울대)
-export const WEDDING_HALL_POSITION = [126.9594982, 37.4657134]
-
-/**
- * 네이버 지도 장소 ID (NMAP_PLACE_ID)
- * 네이버 지도에서 장소 검색 후 URL의 숫자 부분을 입력합니다.
- */
-// TODO: 네이버 1784 장소 ID로 교체
-export const NMAP_PLACE_ID = 13321741
-
-/**
- * 카카오 지도 장소 ID (KMAP_PLACE_ID)
- * 카카오 지도에서 장소 상세보기 클릭 후 URL의 숫자 부분을 입력합니다.
- */
-// TODO: 네이버 1784 장소 ID로 교체
-export const KMAP_PLACE_ID = 8634826
+export const WEDDING_HALL_POSITION = [127.1053139, 37.3594556]
 
 // 신부 정보 설정
 export const BRIDE_FULLNAME = "김민해"
@@ -86,20 +71,20 @@ export const BRIDE_INFO = [
   {
     relation: "신부",
     name: BRIDE_FULLNAME,
-    phone: "010-0000-0000",
-    account: "○○은행 0000000000000",
+    phone: "010-8802-5083",
+    account: "신한 110486867163",
   },
   {
     relation: "신부 아버지",
     name: BRIDE_FATHER,
-    phone: "010-0000-0000",
-    account: "○○은행 0000000000000",
+    phone: "010-2705-5083",
+    account: "국민은행 202211017152",
   },
   {
     relation: "신부 어머니",
     name: BRIDE_MOTHER,
-    phone: "010-0000-0000",
-    account: "○○은행 0000000000000",
+    phone: "010-4845-5083",
+    account: "국민은행 66790204022931",
   },
 ]
 
@@ -118,19 +103,19 @@ export const GROOM_INFO = [
   {
     relation: "신랑",
     name: GROOM_FULLNAME,
-    phone: "010-0000-0000",
-    account: "○○은행 0000000000000",
+    phone: "010-4494-8050",
+    account: "토스뱅크 100002361739",
   },
   {
     relation: "신랑 아버지",
     name: GROOM_FATHER,
-    phone: "010-0000-0000",
-    account: "○○은행 0000000000000",
+    phone: "010-3420-8050",
+    account: "토스뱅크 100192058798",
   },
   {
     relation: "신랑 어머니",
     name: GROOM_MOTHER,
-    phone: "010-0000-0000",
-    account: "○○은행 0000000000000",
+    phone: "010-9520-8050",
+    account: "대구은행 068080398884",
   },
 ]

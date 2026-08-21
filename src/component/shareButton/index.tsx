@@ -29,33 +29,45 @@ export const ShareButton = () => {
   const kakao = useKakao()
   const showToast = useToast()
 
-  const shareKakao = () => {
-    // 카카오 SDK 로드 전(또는 키 미설정)이면 안내만 표시
-    if (!kakao) {
-      showToast("카카오톡 공유를 준비 중입니다.")
+  const share = () => {
+    const shareUrl = getShareUrl()
+
+    // 카카오 SDK(키)가 있으면 카카오톡 위치 공유 템플릿으로 전송
+    if (kakao) {
+      kakao.Share.sendDefault({
+        objectType: "location",
+        address: SHARE_ADDRESS,
+        addressTitle: SHARE_ADDRESS_TITLE,
+        content: {
+          title: `${GROOM_FULLNAME} ❤️ ${BRIDE_FULLNAME}의 결혼식에 초대합니다.`,
+          description:
+            WEDDING_DATE.format(WEDDING_DATE_FORMAT) + "\n" + LOCATION,
+          imageUrl: shareUrl + "/preview_image.png",
+          link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+        },
+        buttons: [
+          {
+            title: "초대장 보기",
+            link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+          },
+        ],
+      })
       return
     }
 
-    const shareUrl = getShareUrl()
-
-    // 카카오톡 공유 전송 (위치 기반 템플릿 사용)
-    kakao.Share.sendDefault({
-      objectType: "location",
-      address: SHARE_ADDRESS,
-      addressTitle: SHARE_ADDRESS_TITLE,
-      content: {
-        title: `${GROOM_FULLNAME} ❤️ ${BRIDE_FULLNAME}의 결혼식에 초대합니다.`,
-        description: WEDDING_DATE.format(WEDDING_DATE_FORMAT) + "\n" + LOCATION,
-        imageUrl: shareUrl + "/preview_image.png",
-        link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
-      },
-      buttons: [
-        {
-          title: "초대장 보기",
-          link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
-        },
-      ],
-    })
+    // 키가 없으면 기기 기본 공유 시트 사용 (모바일에서 카카오톡 등 선택 가능),
+    // 미지원 환경(주로 데스크톱)에서는 링크 복사로 대체합니다.
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `${GROOM_FULLNAME} ❤️ ${BRIDE_FULLNAME}의 결혼식에 초대합니다.`,
+          text: WEDDING_DATE.format(WEDDING_DATE_FORMAT) + "\n" + LOCATION,
+          url: shareUrl,
+        })
+        .catch(() => {})
+    } else {
+      copyLink()
+    }
   }
 
   const copyLink = async () => {
@@ -72,8 +84,8 @@ export const ShareButton = () => {
       <LazyDiv className="reveal eyebrow">SHARE</LazyDiv>
 
       <LazyDiv className="reveal share-buttons">
-        <button type="button" onClick={shareKakao}>
-          카카오톡 공유
+        <button type="button" onClick={share}>
+          {kakao ? "카카오톡 공유" : "공유하기"}
         </button>
         <button type="button" onClick={copyLink}>
           링크 복사
