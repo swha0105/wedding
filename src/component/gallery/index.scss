@@ -5,17 +5,21 @@
     margin-bottom: 32px;
   }
 
-  .photo-group {
-    position: relative;
-    width: 100%;
-    margin-bottom: 24px;
+  /* 정렬된 사각형 그리드 (2열) */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
 
-    &:last-child {
-      margin-bottom: 0;
+    .cell {
+      width: 100%;
     }
 
     .tile {
-      position: absolute;
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 2 / 3;
       overflow: hidden;
       padding: 0;
       /* 인화지 느낌의 흰 여백 + 그림자 */
