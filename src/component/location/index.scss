@@ -26,6 +26,18 @@
     margin-top: 26px;
   }
 
+  /* 예식장 건물 안내 사진 (지도 아래) */
+  .venue-photo {
+    margin-top: 20px;
+
+    img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.11);
+    }
+  }
+
   /* 네이버 지도 키가 없을 때의 자리 표시 */
   .map-placeholder {
     position: relative;

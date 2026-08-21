@@ -1,5 +1,6 @@
 import { Map } from "./map"
 import { LazyDiv } from "../lazyDiv"
+import { VENUE_IMAGE } from "../../images"
 import {
   LOCATION,
   LOCATION_ADDRESS,
@@ -32,17 +33,21 @@ export const Location = () => {
         <Map />
       </LazyDiv>
 
+      {/* 예식장 건물 안내 사진 (지도 아래) */}
+      <LazyDiv className="reveal venue-photo">
+        <img src={VENUE_IMAGE} alt="예식장 네이버 1784 건물 안내" />
+      </LazyDiv>
+
       {/* 오시는 길 */}
-      {/* TODO: 실제 교통편·주차 안내 확정 후 문구 확인 */}
       <LazyDiv className="reveal transport">
         <div className="label">지하철</div>
-        <div className="content">신분당선 정자역 4번 출구 도보 8분</div>
+        <div className="content">정자역 3번 출구 도보 10분</div>
 
         <div className="label">주차</div>
         <div className="content">
-          건물 지하 주차장 2시간 무료
+          네이버 1784 지하 2층 ~ 지하 5층 종일 무료
           <br />
-          (주차 등록 데스크 문의)
+          (충분한 주차공간이 마련되어 있습니다)
         </div>
       </LazyDiv>
     </section>

@@ -18,3 +18,5 @@ npm-debug.log*
 
 # 원본 사진 (리사이즈본만 src/images에 커밋, 원본은 로컬 보관)
 /pics
+/*.avif
+/KakaoTalk_Photo_*.jpeg
