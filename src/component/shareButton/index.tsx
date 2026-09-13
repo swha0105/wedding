@@ -42,7 +42,7 @@ export const ShareButton = () => {
           title: `${GROOM_FULLNAME} ❤️ ${BRIDE_FULLNAME}의 결혼식에 초대합니다.`,
           description:
             WEDDING_DATE.format(WEDDING_DATE_FORMAT) + "\n" + LOCATION,
-          imageUrl: shareUrl + "/preview_image.png",
+          imageUrl: shareUrl + "preview_image_v2.png",
           link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
         },
         buttons: [
