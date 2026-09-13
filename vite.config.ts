@@ -35,6 +35,8 @@ export default defineConfig({
           GROOM_FULLNAME,
           BRIDE_FULLNAME,
           DESCRIPTION: `${WEDDING_DATE.format(WEDDING_DATE_FORMAT)} ${LOCATION}`,
+          // og:image·og:url을 절대 URL로 만들기 위한 사이트 주소 (끝의 / 제거)
+          HOMEPAGE: (pkg.homepage || "").replace(/\/$/, ""),
         },
       },
     }),
