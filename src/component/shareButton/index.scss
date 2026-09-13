@@ -8,11 +8,12 @@
 
   .share-buttons {
     display: flex;
+    justify-content: center;
     gap: 10px;
 
     button {
-      flex: 1;
-      padding: 14px 0;
+      min-width: 200px;
+      padding: 14px 24px;
       background-color: var(--bg-base);
       border: 1px solid var(--line);
       border-radius: 2px;

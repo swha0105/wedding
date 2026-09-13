@@ -87,9 +87,6 @@ export const ShareButton = () => {
         <button type="button" onClick={share}>
           {kakao ? "카카오톡 공유" : "공유하기"}
         </button>
-        <button type="button" onClick={copyLink}>
-          링크 복사
-        </button>
       </LazyDiv>
     </section>
   )
