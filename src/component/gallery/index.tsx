@@ -54,9 +54,6 @@ export const Gallery = () => {
                   alt={`gallery-${idx + 1}`}
                   draggable={false}
                 />
-                <span className="zoom-badge" aria-hidden="true">
-                  ⤢
-                </span>
               </button>
             </LazyDiv>
           ))}
