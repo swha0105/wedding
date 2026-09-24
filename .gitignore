@@ -20,3 +20,6 @@ npm-debug.log*
 /pics
 /*.avif
 /KakaoTalk_Photo_*.jpeg
+
+# Obsidian 에디터 설정
+/.obsidian
