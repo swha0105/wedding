@@ -49,6 +49,9 @@ export const Location = () => {
           <br />
           (충분한 주차공간이 마련되어 있습니다)
         </div>
+
+        <div className="label">안내</div>
+        <div className="content">화환 반입이 불가능합니다</div>
       </LazyDiv>
     </section>
   )
