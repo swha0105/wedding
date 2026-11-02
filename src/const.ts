@@ -40,6 +40,13 @@ export const LOCATION = "네이버 1784 28층 스카이홀"
 export const LOCATION_ADDRESS = "경기 성남시 분당구 정자일로 95, 28층"
 
 /**
+ * 지도·길찾기(네이버/카카오/티맵)에 넘길 장소명
+ * 화면 표시용 LOCATION과 달리 "28층 스카이홀"을 뺀 공식 장소명을 쓴다.
+ * (네이버 지도 검색은 이 이름을 그대로 검색하므로 실제 등록된 장소명이어야 한다)
+ */
+export const MAP_PLACE_NAME = "네이버 1784"
+
+/**
  * 카카오톡 공유 시 사용할 위치 정보 주소
  * 필요에 따라 LOCATION과 다르게 설정할 수 있습니다.
  */
@@ -54,7 +61,7 @@ export const SHARE_ADDRESS_TITLE = LOCATION
  * 지도 서비스(네이버, 카카오)에 사용할 좌표 [경도, 위도]
  * 네이버 1784 (경기 성남시 분당구 정자일로 95) 좌표
  */
-export const WEDDING_HALL_POSITION = [127.1053139, 37.3594556]
+export const WEDDING_HALL_POSITION = [127.1051839, 37.3588807]
 
 // 신부 정보 설정
 export const BRIDE_FULLNAME = "김민해"

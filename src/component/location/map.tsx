@@ -5,7 +5,7 @@ import knaviIcon from "../../icons/knavi-icon.png"
 import tmapIcon from "../../icons/tmap-icon.png"
 import LockIcon from "../../icons/lock-icon.svg?react"
 import UnlockIcon from "../../icons/unlock-icon.svg?react"
-import { LOCATION, WEDDING_HALL_POSITION } from "../../const"
+import { MAP_PLACE_NAME, WEDDING_HALL_POSITION } from "../../const"
 import { NAVER_MAP_CLIENT_ID } from "../../env"
 
 /**
@@ -163,7 +163,7 @@ const Navigation = () => {
         type="button"
         onClick={() =>
           window.open(
-            `https://map.naver.com/p/search/${encodeURIComponent(LOCATION)}`,
+            `https://map.naver.com/p/search/${encodeURIComponent(MAP_PLACE_NAME)}`,
             "_blank",
           )
         }
@@ -177,7 +177,7 @@ const Navigation = () => {
         type="button"
         onClick={() =>
           window.open(
-            `https://map.kakao.com/link/to/${encodeURIComponent(LOCATION)},${lat},${lng}`,
+            `https://map.kakao.com/link/to/${encodeURIComponent(MAP_PLACE_NAME)},${lat},${lng}`,
             "_blank",
           )
         }
@@ -196,14 +196,14 @@ const Navigation = () => {
               const params = new URLSearchParams({
                 goalx: lng.toString(),
                 goaly: lat.toString(),
-                goalName: LOCATION,
+                goalName: MAP_PLACE_NAME,
               })
               window.open(`tmap://route?${params.toString()}`, "_self")
               break
             }
             default:
               window.open(
-                `https://map.kakao.com/link/to/${encodeURIComponent(LOCATION)},${lat},${lng}`,
+                `https://map.kakao.com/link/to/${encodeURIComponent(MAP_PLACE_NAME)},${lat},${lng}`,
                 "_blank",
               )
               break
